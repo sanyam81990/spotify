@@ -619,3 +619,10 @@ body {
     }
 
 }
+
+/* Make all music player icons white */
+
+.songbuttons img,
+.volume img {
+    filter: brightness(0) invert(1);
+}
