@@ -59,14 +59,14 @@ async function getSongs(folder) {
     }
 
     // Attach an event listener to each song
+    // Attach an event listener to each song
     Array.from(
-        document.querySelector(".songList").getElementsByTagName("li"),
-    ).forEach((e) => {
-        e.addEventListener("click", (element) => {
-            playMusic(e.querySelector(".info").firstElementChild.innerHTML.trim());
+        document.querySelector(".songList").getElementsByTagName("li")
+    ).forEach((e, index) => {
+        e.addEventListener("click", () => {
+            playMusic(songs[index]);
         });
     });
-
     return songs;
 }
 
@@ -177,6 +177,17 @@ async function main() {
             `${secondsToMinutesSeconds(currentSong.currentTime)} / ${secondsToMinutesSeconds(currentSong.duration)}`;
         document.querySelector(".circle").style.left =
             (currentSong.currentTime / currentSong.duration) * 100 + "%";
+    });
+    // Automatically play the next song when the current song ends
+    currentSong.addEventListener("ended", () => {
+        let index = songs.indexOf(currentTrack);
+
+        if (index !== -1 && index < songs.length - 1) {
+            playMusic(songs[index + 1]);
+        } else {
+            // Playlist finished
+            play.src = "img/play.svg";
+        }
     });
 
     // Add an event listener to seekbar
