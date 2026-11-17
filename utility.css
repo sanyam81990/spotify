@@ -1,49 +1,60 @@
-.border{
-    border: 2px solid  red;
-    margin: 3px;
-}
 
-.flex{
+/* FLEXBOX */
+
+.flex {
     display: flex;
 }
 
-.justify-center{
+.justify-center {
     justify-content: center;
 }
 
-.items-center{
+.items-center {
     align-items: center;
 }
 
-.bg-black{
+/* BACKGROUNDS */
+
+.bg-black {
     background-color: black;
     color: white;
 }
 
-.invert{
-    filter: invert(1);
-}
-
-.bg-grey{
+.bg-grey {
     background-color: #121212;
 }
 
-.rounded{
+/* IMAGE FILTER */
+
+.invert {
+    filter: invert(1);
+}
+
+/* BORDER */
+
+.border {
+    border: 2px solid red;
+    margin: 3px;
+}
+
+/* SPACING */
+
+.rounded {
     border-radius: 7px;
 }
 
-.m-1{
+.m-1 {
     margin: 5px;
 }
 
-.p-1{
+.p-1 {
     padding: 10px;
 }
 
+/* SCROLLBAR */
 
-/* For Webkit browsers (Chrome, Safari, Edge) */
 ::-webkit-scrollbar {
-    width: 12px;
+    width: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -55,7 +66,8 @@
     background-color: #222;
 }
 
-/* For Firefox */
+/* FIREFOX */
+
 * {
     scrollbar-width: thin;
     scrollbar-color: #333 #222;
