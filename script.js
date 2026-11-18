@@ -212,6 +212,244 @@ async function displayAlbums() {
 
 
 
+// Load every song from every album
+async function loadAllSongs() {
+
+    if (searchCatalogLoaded) {
+        return;
+    }
+
+    const results = document.getElementById("searchResults");
+
+    results.textContent = "Loading all songs...";
+
+    try {
+
+        // Get all album folder names
+        const response = await fetch("/songs/albums.json");
+
+        if (!response.ok) {
+            throw new Error("Could not load albums.json");
+        }
+
+        const albums = await response.json();
+
+        allSongs = [];
+
+        // Fetch songs.json from every album
+        const albumPromises = albums.map(async (folder) => {
+
+            const folderPath = `songs/${folder}`;
+
+            const encodedPath = encodeFolderPath(folderPath);
+
+            try {
+
+                const response = await fetch(
+                    `/${encodedPath}/songs.json`
+                );
+
+                if (!response.ok) {
+                    console.error("Could not load:", folder);
+                    return;
+                }
+
+                const albumSongs = await response.json();
+
+                if (!Array.isArray(albumSongs)) {
+                    return;
+                }
+
+                albumSongs.forEach(song => {
+
+                    allSongs.push({
+                        name: song,
+                        folder: folder,
+                        folderPath: folderPath,
+                        albumSongs: albumSongs
+                    });
+
+                });
+
+            } catch (error) {
+                console.error("Album error:", folder, error);
+            }
+
+        });
+
+        await Promise.all(albumPromises);
+
+        searchCatalogLoaded = true;
+
+        console.log("All songs loaded:", allSongs);
+
+        // Show all songs immediately
+        renderSearchResults("");
+
+    } catch (error) {
+
+        console.error("Search loading error:", error);
+
+        results.textContent = "Unable to load songs.";
+
+    }
+
+}
+
+
+// Display search results
+function renderSearchResults(query = "") {
+
+    const results = document.getElementById("searchResults");
+
+    const title = document.getElementById("searchTitle");
+
+    results.innerHTML = "";
+
+    const searchText = query.trim().toLowerCase();
+
+    // Search both song name and album name
+    const filteredSongs = allSongs.filter(song => {
+
+        return (
+            song.name.toLowerCase().includes(searchText) ||
+            song.folder.toLowerCase().includes(searchText)
+        );
+
+    });
+
+    title.textContent = searchText
+        ? `Search Results (${filteredSongs.length})`
+        : `All Songs (${allSongs.length})`;
+
+    if (filteredSongs.length === 0) {
+
+        const message = document.createElement("p");
+
+        message.className = "no-results";
+
+        message.textContent = "No songs found. Try another search.";
+
+        results.appendChild(message);
+
+        return;
+    }
+
+    // Create song rows
+    filteredSongs.forEach(song => {
+
+        const songRow = document.createElement("div");
+
+        songRow.className = "search-result";
+
+        const info = document.createElement("div");
+
+        info.className = "result-info";
+
+        const songName = document.createElement("span");
+
+        songName.className = "result-name";
+
+        songName.textContent = song.name.replace(/128 Kbps/gi, "").replace(/\.mp3$/i, "").trim();
+
+        const albumName = document.createElement("span");
+
+        albumName.className = "result-album";
+
+        albumName.textContent = song.folder;
+
+        const playIcon = document.createElement("img");
+
+        playIcon.className = "result-play invert";
+
+        playIcon.src = "img/play.svg";
+
+        playIcon.alt = "Play";
+
+        info.appendChild(songName);
+
+        info.appendChild(albumName);
+
+        songRow.appendChild(info);
+
+        songRow.appendChild(playIcon);
+
+        // Play selected song
+        songRow.addEventListener("click", () => {
+
+            // Set the correct album playlist
+            songs = song.albumSongs;
+
+            currFolder = song.folderPath;
+
+            // Play selected track
+            playMusic(song.name);
+
+        });
+
+        results.appendChild(songRow);
+
+    });
+
+}
+
+
+// Search input functionality
+function setupSearch() {
+
+    const searchInput = document.getElementById("searchInput");
+
+    searchInput.addEventListener("input", () => {
+
+        renderSearchResults(searchInput.value);
+
+    });
+
+}
+
+
+// Switch between Home and Search
+function setupNavigation() {
+
+    const homeNav = document.getElementById("homeNav");
+
+    const searchNav = document.getElementById("searchNav");
+
+const homePage = document.querySelector(".home-content");
+    const searchPage = document.querySelector(".searchPage");
+
+
+    // Home button
+    homeNav.addEventListener("click", () => {
+
+        homePage.classList.remove("hidden");
+
+        searchPage.classList.add("hidden");
+
+    });
+
+
+    // Search button
+    searchNav.addEventListener("click", async () => {
+
+        homePage.classList.add("hidden");
+
+        searchPage.classList.remove("hidden");
+
+        // Load all songs on first click
+        await loadAllSongs();
+
+        // Show all songs even when search is empty
+        renderSearchResults(
+            document.getElementById("searchInput").value
+        );
+
+        document.getElementById("searchInput").focus();
+
+    });
+
+}
+
 // Main function
 async function main() {
 
@@ -225,6 +463,11 @@ async function main() {
 
     // Display albums
     await displayAlbums();
+    // Setup search functionality
+setupSearch();
+
+// Setup Home and Search navigation
+setupNavigation();
 
 
     // Play / Pause button
