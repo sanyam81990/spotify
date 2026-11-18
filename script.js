@@ -409,37 +409,44 @@ function setupSearch() {
 
 
 // Switch between Home and Search
+
 function setupNavigation() {
 
     const homeNav = document.getElementById("homeNav");
-
     const searchNav = document.getElementById("searchNav");
 
-const homePage = document.querySelector(".home-content");
+    const homePage = document.querySelector(".home-content");
     const searchPage = document.querySelector(".searchPage");
 
+    const sidebar = document.querySelector(".left");
+
+    // Automatically close sidebar on mobile
+    function closeSidebar() {
+        if (window.innerWidth <= 768) {
+            sidebar.style.left = "-120%";
+        }
+    }
 
     // Home button
     homeNav.addEventListener("click", () => {
 
         homePage.classList.remove("hidden");
-
         searchPage.classList.add("hidden");
 
-    });
+        closeSidebar();
 
+    });
 
     // Search button
     searchNav.addEventListener("click", async () => {
 
         homePage.classList.add("hidden");
-
         searchPage.classList.remove("hidden");
 
-        // Load all songs on first click
+        closeSidebar();
+
         await loadAllSongs();
 
-        // Show all songs even when search is empty
         renderSearchResults(
             document.getElementById("searchInput").value
         );
