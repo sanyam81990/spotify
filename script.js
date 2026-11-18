@@ -1,10 +1,13 @@
-
 console.log("Lets write JavaScript");
 
 let currentSong = new Audio();
 let songs = [];
 let currFolder = "";
 let currentTrack = "";
+
+// Global search variables
+let allSongs = [];
+let searchCatalogLoaded = false;
 
 // Convert seconds into MM:SS format
 function secondsToMinutesSeconds(seconds) {
