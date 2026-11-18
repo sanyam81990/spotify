@@ -622,6 +622,118 @@ body {
 
 /* Make all music player icons white */
 
+
+/* SEARCH PAGE */
+
+.hidden {
+    display: none !important;
+}
+
+.searchPage {
+    padding: 25px;
+    min-height: 80vh;
+}
+
+.searchPage h1 {
+    font-size: 30px;
+    margin-bottom: 25px;
+}
+
+.searchBox {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: #242424;
+    padding: 15px 20px;
+    border-radius: 30px;
+    max-width: 650px;
+    margin-bottom: 35px;
+}
+
+.searchBox img {
+    width: 25px;
+}
+
+.searchBox input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 16px;
+    width: 100%;
+}
+
+.searchBox input::placeholder {
+    color: #b3b3b3;
+}
+
+.searchPage h2 {
+    margin-bottom: 20px;
+}
+
+.searchResults {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.search-result {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    gap: 15px;
+}
+
+.search-result:hover {
+    background: #2a2a2a;
+}
+
+.search-result .result-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.search-result .result-name {
+    color: white;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+
+.search-result .result-album {
+    color: #b3b3b3;
+    font-size: 13px;
+}
+
+.search-result .result-play {
+    width: 22px;
+    flex-shrink: 0;
+}
+
+.no-results {
+    color: #b3b3b3;
+    padding: 20px 10px;
+}
+
+@media (max-width: 600px) {
+    .searchPage {
+        padding: 15px;
+    }
+
+    .searchPage h1 {
+        font-size: 25px;
+    }
+
+    .searchBox {
+        padding: 12px 15px;
+    }
+}
+
+
 .songbuttons img,
 .volume img {
     filter: brightness(0) invert(1);
